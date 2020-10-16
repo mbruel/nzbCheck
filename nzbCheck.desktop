@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=nzbcheck
+Exec=nzbcheck %F
+Comment=Test nzb files using the Nntp Stat command
+Terminal=true
+Categories=Network;
+X-AppImage-Version=
