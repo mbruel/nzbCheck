@@ -1,0 +1,8 @@
+nzbCheck.pro.user
+.qmake.stash
+*.o
+Makefile
+nzbcheck
+moc_*.cpp
+moc_predefs.h
+qrc_resources.cpp
