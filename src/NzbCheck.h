@@ -43,7 +43,7 @@ class NzbCheck : public QObject
 
 private:
     static constexpr const char *sAppName = "nzbCheck";
-    static constexpr const char *sVersion = "1.0";
+    static constexpr const char *sVersion = "1.1";
     static constexpr const char *sNntpServerStrRegExp = "^(([^:]+):([^@]+)@@@)?([\\w\\.\\-_]+):(\\d+):(\\d+):(no)?ssl$";
 
     enum class Opt {HELP = 0, VERSION,
