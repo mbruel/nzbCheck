@@ -12,8 +12,7 @@ Syntax: nzbcheck (options)* -i &lt;nzb file&gt;
 	-d or --debug      : display debug information
 	-q or --quit       : quiet mode (no output on stdout)
 	-i or --input      : input file : nzb file to check
-	-S or --server     : NNTP server following the format (<user>:<pass>@@@)?<host>:<port>:<nbCons>:(no)?ssl
-	-h or --host       : NNTP server hostname (or IP)
+	-S or --server     : NNTP server following the format (&lt;user&gt;:&lt;pass&gt;@@@)?&lt;host&gt;:&lt;port&gt;:&lt;nbCons&gt;:(no)?ssl	-h or --host       : NNTP server hostname (or IP)
 	-P or --port       : NNTP server port
 	-s or --ssl        : use SSL
 	-u or --user       : NNTP server username
