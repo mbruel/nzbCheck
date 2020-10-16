@@ -348,11 +348,18 @@ void NzbCheck::_syntax(char *appName)
     _cout << tr("Syntax: ") << app << " (options)* -i <nzb file>\n";
     for (const QCommandLineOption & opt : sCmdOptions)
     {
+        if (opt.valueName() == sOptionNames[Opt::SERVER])
+            _cout << "\n// " << tr("you can provide servers in one string using -S and/or split the parameters for ONE SINGLE server") << "\n";
+
         if (opt.names().size() == 1)
             _cout << QString("\t--%1: %2\n").arg(opt.names().first(), -17).arg(tr(opt.description().toLocal8Bit().constData()));
         else
             _cout << QString("\t-%1: %2\n").arg(opt.names().join(" or --"), -18).arg(tr(opt.description().toLocal8Bit().constData()));
     }
+    _cout << "\nExamples:\n"
+          << "  - " << appName << " --progress -S \"user:password@@@news.usenetserver.com:563:50:ssl\" -i /nzb/myNzbFile.nzb\n"
+          << "  - " << appName << " --quiet -h news.usenetserver.com -P 563 -u user -p password -n 50 -s -i /nzb/myNzbFile.nzb\n\n";
+
 }
 
 const QString NzbCheck::sASCII = QString("\

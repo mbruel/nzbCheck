@@ -12,6 +12,8 @@ Syntax: nzbcheck (options)* -i &lt;nzb file&gt;
 	-d or --debug      : display debug information
 	-q or --quit       : quiet mode (no output on stdout)
 	-i or --input      : input file : nzb file to check
+
+// you can provide servers in one string using -S and/or split the parameters for ONE SINGLE server
 	-S or --server     : NNTP server following the format (&lt;user&gt;:&lt;pass&gt;@@@)?&lt;host&gt;:&lt;port&gt;:&lt;nbCons&gt;:(no)?ssl
 	-h or --host       : NNTP server hostname (or IP)
 	-P or --port       : NNTP server port
@@ -19,6 +21,10 @@ Syntax: nzbcheck (options)* -i &lt;nzb file&gt;
 	-u or --user       : NNTP server username
 	-p or --pass       : NNTP server password
 	-n or --connection : number of NNTP connections
+
+Examples:
+  - nzbcheck --progress -S "user:password@@@news.usenetserver.com:563:50:ssl" -i /nzb/myNzbFile.nzb
+  - nzbcheck --quiet -h news.usenetserver.com -P 563 -u user -p password -n 50 -s -i /nzb/myNzbFile.nzb
 </pre>
 
 ### Output:
