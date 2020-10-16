@@ -10,6 +10,12 @@
 class NntpServerParams;
 class NntpCon;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+    #define MB_FLUSH flush
+#else
+    #define MB_FLUSH Qt::flush
+#endif
+
 class NzbCheck : public QObject
 {
     Q_OBJECT
@@ -94,7 +100,7 @@ private:
 void NzbCheck::missingArticle(const QString &article)
 {
     _cout << (_dispProgressBar ? "\n" : "")
-          << tr("+ Missing Article: ") << article << Qt::endl;
+          << tr("+ Missing Article: ") << article << "\n" << MB_FLUSH;
     ++_nbMissingArticles;
 }
 
@@ -113,12 +119,12 @@ int NzbCheck::nbMissingArticles() const { return _nbMissingArticles; }
 bool NzbCheck::debugMode() const { return _debug != 0; }
 void NzbCheck::setDebug(ushort level) { _debug = level; }
 
-void NzbCheck::log(const QString     &aMsg) { _cout << aMsg << Qt::endl; }
-void NzbCheck::log(const char        *aMsg) { _cout << aMsg << Qt::endl; }
-void NzbCheck::log(const std::string &aMsg) { _cout << aMsg.c_str() << Qt::endl; }
+void NzbCheck::log(const QString     &aMsg) { _cout << aMsg << "\n" << MB_FLUSH; }
+void NzbCheck::log(const char        *aMsg) { _cout << aMsg << "\n" << MB_FLUSH; }
+void NzbCheck::log(const std::string &aMsg) { _cout << aMsg.c_str() << "\n" << MB_FLUSH; }
 
-void NzbCheck::error(const QString     &aMsg) { _cerr << aMsg << Qt::endl; }
-void NzbCheck::error(const char        *aMsg) { _cerr << aMsg << Qt::endl; }
-void NzbCheck::error(const std::string &aMsg) { _cerr << aMsg.c_str() << Qt::endl; }
+void NzbCheck::error(const QString     &aMsg) { _cerr << aMsg << "\n" << MB_FLUSH; }
+void NzbCheck::error(const char        *aMsg) { _cerr << aMsg << "\n" << MB_FLUSH; }
+void NzbCheck::error(const std::string &aMsg) { _cerr << aMsg.c_str() << "\n" << MB_FLUSH; }
 
 #endif // NZBCHECK_H

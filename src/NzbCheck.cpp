@@ -53,11 +53,11 @@ void NzbCheck::onDisconnected(NntpCon *con)
         {
             disconnect(&_progressbarTimer, &QTimer::timeout, this, &NzbCheck::onRefreshprogressbarBar);
             onRefreshprogressbarBar();
-            _cout << Qt::endl;
+            _cout << "\n" << MB_FLUSH;
         }
 
         if (!_quietMode)
-            _cout << tr("Nb Article Failed: %1/%2").arg(_nbMissingArticles).arg(_nbTotalArticles) << Qt::endl;
+            _cout << tr("Nb Article Failed: %1/%2").arg(_nbMissingArticles).arg(_nbTotalArticles) << "\n" << MB_FLUSH;
         qApp->quit();
     }
 }
@@ -120,17 +120,17 @@ int NzbCheck::parseNzb()
 
         if (xmlReader.hasError()) {
             _cerr << "parsing error: " << xmlReader.errorString()
-                      << " at line: " << xmlReader.lineNumber() << Qt::endl;
+                      << " at line: " << xmlReader.lineNumber() << "\n" << MB_FLUSH;
             return -2;
         }
         _nbTotalArticles = _articles.size();
         if (!_quietMode)
-            _cout << tr("%1 has %2 articles").arg(QFileInfo(_nzbPath).fileName()).arg(_nbTotalArticles) << Qt::endl;
+            _cout << tr("%1 has %2 articles").arg(QFileInfo(_nzbPath).fileName()).arg(_nbTotalArticles) << "\n" << MB_FLUSH;
         return _nbTotalArticles;
     }
     else
     {
-        _cerr << tr("Error opening nzb file...") << Qt::endl;
+        _cerr << tr("Error opening nzb file...") << "\n" << MB_FLUSH;
         return -1;
     }
 
@@ -163,7 +163,7 @@ void NzbCheck::checkPost()
     }
 
 //    if (debugMode())
-        _cout << tr("Using %1 Connections").arg(nbCons) << Qt::endl;
+        _cout << tr("Using %1 Connections").arg(nbCons) << "\n" << MB_FLUSH;
 
     if (_dispProgressBar)
     {
@@ -187,7 +187,7 @@ bool NzbCheck::parseCommandLine(int argc, char *argv[])
 
     if (!parser.parse(args))
     {
-        _cerr << tr("Error syntax: %1\nTo list the available options use --help\n").arg(parser.errorText()).arg(argv[0]) << Qt::endl;
+        _cerr << tr("Error syntax: %1\nTo list the available options use --help\n").arg(parser.errorText()).arg(argv[0]) << "\n" << MB_FLUSH;
         return false;
     }
 
@@ -216,7 +216,7 @@ bool NzbCheck::parseCommandLine(int argc, char *argv[])
         QFileInfo fi(_nzbPath);
         if (!fi.exists() || !fi.isFile() || !fi.isReadable())
         {
-            _cerr << tr("Error: please provide a readable nzb file...") << Qt::endl;
+            _cerr << tr("Error: please provide a readable nzb file...") << "\n" << MB_FLUSH;
             return false;
         }
     }
@@ -326,7 +326,7 @@ bool NzbCheck::parseCommandLine(int argc, char *argv[])
 
     if (_nntpServers.isEmpty())
     {
-        _cerr << tr("Error: you should at least provide one Usenet provider using -S or (-h, -p, -u, -P...)") << Qt::endl;
+        _cerr << tr("Error: you should at least provide one Usenet provider using -S or (-h, -p, -u, -P...)") << "\n" << MB_FLUSH;
         return false;
     }
 
@@ -338,7 +338,7 @@ bool NzbCheck::parseCommandLine(int argc, char *argv[])
 void NzbCheck::_showVersionASCII()
 {
     _cout << sASCII
-          << "                          v" << sVersion << "\n\n" << Qt::endl;
+          << "                          v" << sVersion << "\n\n" << MB_FLUSH;
 
 }
 
