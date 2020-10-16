@@ -1,7 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=nzbcheck
+Name=nzbCheck
 Exec=nzbcheck %F
+Icon=nzbCheck
 Comment=Test nzb files using the Nntp Stat command
 Terminal=true
 Categories=Network;
