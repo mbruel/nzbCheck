@@ -1,3 +1,24 @@
+//========================================================================
+//
+// Copyright (C) 2020 Matthieu Bruel <Matthieu.Bruel@gmail.com>
+//
+// This file is a part of ngPost : https://github.com/mbruel/nzbCheck
+//
+// ngPost is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; version 3.0 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301,
+// USA.
+//
+//========================================================================
+
 #ifndef NZBCHECK_H
 #define NZBCHECK_H
 #include <QObject>
@@ -22,8 +43,9 @@ class NzbCheck : public QObject
 
 private:
     static constexpr const char *sAppName = "nzbCheck";
-    static constexpr const char *sVersion = "1.0";
+    static constexpr const char *sVersion = "1.2";
     static constexpr const char *sNntpServerStrRegExp = "^(([^:]+):([^@]+)@@@)?([\\w\\.\\-_]+):(\\d+):(\\d+):(no)?ssl$";
+    static constexpr const char *sNntpArticleYencSubjectStrRegExp = "^\\[\\d+/\\d+\\]\\s+.+\\(\\d+/(\\d+)\\)$";
 
     enum class Opt {HELP = 0, VERSION,
                     PROGRESS, DEBUG, QUIET,
@@ -62,7 +84,7 @@ private:
 #else
     static const int sprogressbarBarWidth = 50;
 #endif
-
+    static const QRegularExpression sNntpArticleYencSubjectRegExp;
 
 public slots:
     void onDisconnected(NntpCon *con);
@@ -103,8 +125,9 @@ private:
 
 void NzbCheck::missingArticle(const QString &article)
 {
-    _cout << (_dispProgressBar ? "\n" : "")
-          << tr("+ Missing Article: ") << article << "\n" << MB_FLUSH;
+    if (!_quietMode)
+        _cout << (_dispProgressBar ? "\n" : "")
+              << tr("+ Missing Article on server: ") << article << "\n" << MB_FLUSH;
     ++_nbMissingArticles;
 }
 

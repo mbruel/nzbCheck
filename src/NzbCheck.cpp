@@ -1,3 +1,24 @@
+//========================================================================
+//
+// Copyright (C) 2020 Matthieu Bruel <Matthieu.Bruel@gmail.com>
+//
+// This file is a part of ngPost : https://github.com/mbruel/nzbCheck
+//
+// ngPost is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; version 3.0 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301,
+// USA.
+//
+//========================================================================
+
 #include "NzbCheck.h"
 #include "NntpCon.h"
 #include "NntpServerParams.h"
@@ -9,6 +30,8 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QRegularExpression>
+
+const QRegularExpression NzbCheck::sNntpArticleYencSubjectRegExp = QRegularExpression(sNntpArticleYencSubjectStrRegExp);
 
 const QMap<NzbCheck::Opt, QString> NzbCheck::sOptionNames =
 {
@@ -57,7 +80,7 @@ void NzbCheck::onDisconnected(NntpCon *con)
         }
 
         if (!_quietMode)
-            _cout << tr("Nb Article Failed: %1/%2").arg(_nbMissingArticles).arg(_nbTotalArticles) << "\n" << MB_FLUSH;
+            _cout << tr("Nb Missing Article(s): %1/%2").arg(_nbMissingArticles).arg(_nbTotalArticles) << "\n" << MB_FLUSH;
         qApp->quit();
     }
 }
@@ -111,10 +134,41 @@ int NzbCheck::parseNzb()
         {
             QXmlStreamReader::TokenType type = xmlReader.readNext();
             if (type == QXmlStreamReader::TokenType::StartElement
-                    && xmlReader.name() == "segment")
+                    && xmlReader.name() == "file")
             {
-                xmlReader.readNext();
-                _articles.push(QString("<%1>").arg(xmlReader.text().toString()));
+                QString subject = xmlReader.attributes().value("subject").toString();
+                QRegularExpressionMatch match = sNntpArticleYencSubjectRegExp.match(subject);
+                int nbArticles = 0, nbExpectedArticles = 0;
+                if (match.hasMatch())
+                    nbExpectedArticles = match.captured(1).toInt();
+                while ( !xmlReader.atEnd() )
+                {
+                    QXmlStreamReader::TokenType type = xmlReader.readNext();
+                    if (type == QXmlStreamReader::TokenType::EndElement
+                            && xmlReader.name() == "file")
+                    {
+                        if (debugMode())
+                            _cout << tr("The file '%1' has %2 articles in the nzb (expected: %3)").arg(
+                                         subject).arg(nbArticles).arg(nbExpectedArticles) << "\n" << MB_FLUSH;
+                        if (nbArticles < nbExpectedArticles)
+                        {
+                            if (!_quietMode)
+                                _cout << tr("- %1 missing Article(s) in nzb for '%2'").arg(
+                                         nbExpectedArticles - nbArticles).arg(subject) << "\n" << MB_FLUSH;
+
+                            _nbMissingArticles += nbExpectedArticles - nbArticles;
+                        }
+
+                        break;
+                    }
+                    else if (type == QXmlStreamReader::TokenType::StartElement
+                            && xmlReader.name() == "segment")
+                    {
+                        ++nbArticles;
+                        xmlReader.readNext();
+                        _articles.push(QString("<%1>").arg(xmlReader.text().toString()));
+                    }
+                }
             }
         }
 
