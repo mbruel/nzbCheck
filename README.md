@@ -2,8 +2,8 @@
 command line tool to check nzb files:<br/>
 - First inside the nzb to see if each files has the expected number of Articles
 - then we check their availability on Usenet using the [NNTP Stat command](https://tools.ietf.org/html/rfc3977#section-6.2.4). 
-
-Implemented in C++11/Qt5, nzbCheck is released for Linux, Windows, MacOS and RPI.
+<br/>
+Implemented in C++11/Qt5, nzbCheck is released for Linux, Windows, MacOS and RPI.<br/>
 <br/>
 /!\ It is only checking if the Articles are available, there is no CRC check => some of them might be corrupted /!\
 
