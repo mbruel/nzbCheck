@@ -28,6 +28,7 @@
 #include <QSet>
 #include <QTimer>
 #include <QCommandLineOption>
+#include <QElapsedTimer>
 class NntpServerParams;
 class NntpCon;
 
@@ -43,7 +44,7 @@ class NzbCheck : public QObject
 
 private:
     static constexpr const char *sAppName = "nzbCheck";
-    static constexpr const char *sVersion = "1.2";
+    static constexpr const char *sVersion = "1.3";
     static constexpr const char *sNntpServerStrRegExp = "^(([^:]+):([^@]+)@@@)?([\\w\\.\\-_]+):(\\d+):(\\d+):(no)?ssl$";
     static constexpr const char *sNntpArticleYencSubjectStrRegExp = "^\\[\\d+/\\d+\\]\\s+.+\\(\\d+/(\\d+)\\)$";
 
@@ -77,6 +78,9 @@ private:
     const int         _refreshRate;           //!< refresh rate
 
     bool              _quietMode;
+
+    QElapsedTimer     _timeStart;
+    int               _nbCons;
 
     static const int sDefaultRefreshRate  = 200; //!< how often shall we refresh the progressbar bar?
     static const int sprogressbarBarWidth = 50;

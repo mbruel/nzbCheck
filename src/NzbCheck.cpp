@@ -30,6 +30,7 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QRegularExpression>
+#include <QTime>
 
 const QRegularExpression NzbCheck::sNntpArticleYencSubjectRegExp = QRegularExpression(sNntpArticleYencSubjectStrRegExp);
 
@@ -80,7 +81,16 @@ void NzbCheck::onDisconnected(NntpCon *con)
         }
 
         if (!_quietMode)
-            _cout << tr("Nb Missing Article(s): %1/%2").arg(_nbMissingArticles).arg(_nbTotalArticles) << "\n" << MB_FLUSH;
+        {
+            qint64 duration = _timeStart.elapsed();
+            _cout << tr("Nb Missing Article(s): %1/%2 (check done in %3 (%4 sec) using %5 connections on %6 server(s))").arg(
+                         _nbMissingArticles).arg(
+                         _nbTotalArticles).arg(
+                         QTime::fromMSecsSinceStartOfDay(static_cast<int>(duration)).toString("hh:mm:ss.zzz")).arg(
+                         std::round(1.*duration/1000)).arg(
+                         _nbCons).arg(
+                         _nntpServers.size()) << "\n" << MB_FLUSH;
+        }
         qApp->quit();
     }
 }
@@ -192,11 +202,13 @@ int NzbCheck::parseNzb()
 
 void NzbCheck::checkPost()
 {
-    int nbCons = 0;
-    for (NntpServerParams *srvParam : _nntpServers)
-        nbCons += srvParam->nbCons;
+    _timeStart.start();
 
-    nbCons = std::min(_nbTotalArticles, nbCons);
+    _nbCons = 0;
+    for (NntpServerParams *srvParam : _nntpServers)
+        _nbCons += srvParam->nbCons;
+
+    _nbCons = std::min(_nbTotalArticles, _nbCons);
 
     int nb = 0;
     for (NntpServerParams *srvParam : _nntpServers)
@@ -209,15 +221,15 @@ void NzbCheck::checkPost()
 
             _connections.insert(con);
 
-            if (++nb == nbCons)
+            if (++nb == _nbCons)
                 break;
         }
-        if (nb == nbCons)
+        if (nb == _nbCons)
             break;
     }
 
-//    if (debugMode())
-        _cout << tr("Using %1 Connections").arg(nbCons) << "\n" << MB_FLUSH;
+    if (debugMode())
+        _cout << tr("Using %1 Connections").arg(_nbCons) << "\n" << MB_FLUSH;
 
     if (_dispProgressBar)
     {
