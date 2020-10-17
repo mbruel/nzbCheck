@@ -43,8 +43,9 @@ class NzbCheck : public QObject
 
 private:
     static constexpr const char *sAppName = "nzbCheck";
-    static constexpr const char *sVersion = "1.1";
+    static constexpr const char *sVersion = "1.2";
     static constexpr const char *sNntpServerStrRegExp = "^(([^:]+):([^@]+)@@@)?([\\w\\.\\-_]+):(\\d+):(\\d+):(no)?ssl$";
+    static constexpr const char *sNntpArticleYencSubjectStrRegExp = "^\\[\\d+/\\d+\\]\\s+.+\\(\\d+/(\\d+)\\)$";
 
     enum class Opt {HELP = 0, VERSION,
                     PROGRESS, DEBUG, QUIET,
@@ -79,6 +80,7 @@ private:
 
     static const int sDefaultRefreshRate  = 200; //!< how often shall we refresh the progressbar bar?
     static const int sprogressbarBarWidth = 50;
+    static const QRegularExpression sNntpArticleYencSubjectRegExp;
 
 
 public slots:
@@ -120,8 +122,9 @@ private:
 
 void NzbCheck::missingArticle(const QString &article)
 {
-    _cout << (_dispProgressBar ? "\n" : "")
-          << tr("+ Missing Article: ") << article << "\n" << MB_FLUSH;
+    if (!_quietMode)
+        _cout << (_dispProgressBar ? "\n" : "")
+              << tr("+ Missing Article on server: ") << article << "\n" << MB_FLUSH;
     ++_nbMissingArticles;
 }
 
