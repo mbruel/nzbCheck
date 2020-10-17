@@ -57,7 +57,11 @@ private:
     bool              _quietMode;
 
     static const int sDefaultRefreshRate  = 200; //!< how often shall we refresh the progressbar bar?
+#if defined( Q_OS_WIN )
+    static const int sprogressbarBarWidth = 30;
+#else
     static const int sprogressbarBarWidth = 50;
+#endif
 
 
 public slots:
