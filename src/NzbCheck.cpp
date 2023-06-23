@@ -40,7 +40,7 @@ const QMap<NzbCheck::Opt, QString> NzbCheck::sOptionNames =
     {Opt::VERSION,     "version"},
     {Opt::PROGRESS,    "progress"},
     {Opt::DEBUG,       "debug"},
-    {Opt::QUIET,       "quit"},
+    {Opt::QUIET,       "quiet"},
     {Opt::INPUT,       "input"},
     {Opt::SERVER,      "server"},
     {Opt::HOST,        "host"},
