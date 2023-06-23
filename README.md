@@ -14,7 +14,7 @@ Syntax: nzbcheck (options)* -i &lt;nzb file&gt;
 	-v or --version    : app version
 	--progress         : display progress bar
 	-d or --debug      : display debug information
-	-q or --quiet       : quiet mode (no output on stdout)
+	-q or --quiet      : quiet mode (no output on stdout)
 	-i or --input      : input file : nzb file to check
 
 // you can provide servers in one string using -S and/or split the parameters for ONE SINGLE server
